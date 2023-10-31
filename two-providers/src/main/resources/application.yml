@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: Ouath2 Demo
   security:
     oauth2:
       client:

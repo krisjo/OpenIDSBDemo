@@ -7,14 +7,14 @@
 <meta name="description" content="" />
 <meta name="viewport" content="width=device-width" />
 <base href="/" />
-<link rel="stylesheet" type="text/css"
-    href="/webjars/bootstrap/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
 <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
-<script type="text/javascript"
-    src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
 </head>
 <body>
-    <h1>Login</h1>
+    <div class="container">
+        <h1>Oauth2 & Open ID Connect</h1>
+    </div>
     <div class="container unauthenticated">
         <div>
             With Google: <a href="/oauth2/authorization/google">click here</a>
@@ -24,10 +24,11 @@
         </div>
     </div>
     <div class="container authenticated" style="display: none">
-        Logged in as: <span id="user"></span>, email: <span id="email"></span>
+        <h4>Logged in via <span id="iss"></span> as <span id="user"></span>, email: <span id="email"></span><br/></h4>
         <div>
-        Principal: <span id="principal"></span>
+        <strong>Principal:</strong><br/><span id="principal"></span>
         </div>
+        <br/>
         <div>
             <button onClick="logout()" class="btn btn-primary">Logout</button>
         </div>
@@ -47,14 +48,16 @@
               }
             }
           });
+
           $.get("/user", function(data) {
               $("#user").html(data.name);
               $("#email").html(data.email);
+              $("#iss").html(data.iss);
               $(".unauthenticated").hide();
               $(".authenticated").show();
           });
           $.get("/oidc-principal", function(data) {
-              $( "#principal" ).html( data.principal );
+              $( "#principal" ).html( data );
           });
 
           var logout = function() {
