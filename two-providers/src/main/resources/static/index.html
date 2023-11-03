@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<title>Demo</title>
+    <title>Hello Open ID Connect</title>
 <meta name="description" content="" />
 <meta name="viewport" content="width=device-width" />
 <base href="/" />
@@ -13,7 +13,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Oauth2 & Open ID Connect</h1>
+        <h1>Open ID Connect on Spring Boot</h1>
     </div>
     <div class="container unauthenticated">
         <div>
@@ -29,6 +29,7 @@
         <strong>Principal:</strong><br/><span id="principal"></span>
         </div>
         <br/>
+        <img src="" id="picture" alt="Missing picture"/>
         <div>
             <button onClick="logout()" class="btn btn-primary">Logout</button>
         </div>
@@ -53,6 +54,7 @@
               $("#user").html(data.name);
               $("#email").html(data.email);
               $("#iss").html(data.iss);
+              $("#picture").attr("src",data.picture);
               $(".unauthenticated").hide();
               $(".authenticated").show();
           });
