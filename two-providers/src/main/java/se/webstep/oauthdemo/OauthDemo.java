@@ -29,7 +29,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -39,22 +38,12 @@ public class OauthDemo extends WebSecurityConfigurerAdapter {
 
     @RequestMapping("/user")
     public Map<String, Object> user(@AuthenticationPrincipal OAuth2User principal) {
-        Map<String, Object> attributes = new HashMap<>();
-        attributes.put("name", principal.getAttribute("name"));
-        attributes.put("email", principal.getAttribute("email"));
-        attributes.put("iss", principal.getAttribute("iss"));
-        if (principal.getAttribute("picture") != null) {
-            attributes.put("picture", principal.getAttribute("picture"));
-        }
-        if (principal.getAttribute("com.svipe:document_portrait") != null) {
-            attributes.put("picture", principal.getAttribute("com.svipe:document_portrait"));
-        }
-        return attributes;
+        return principal.getAttributes();
     }
 
     @GetMapping("/oidc-principal")
     public String getOidcUserPrincipal(@AuthenticationPrincipal OidcUser principal) {
-        Map<String, Object> claims = principal.getClaims();
+        Map<String, Object> claims = principal.getAttributes();
         return claims.keySet().stream().map(k -> k + " = " + claims.get(k).toString()).collect(Collectors.joining("<br/>"));
     }
 
