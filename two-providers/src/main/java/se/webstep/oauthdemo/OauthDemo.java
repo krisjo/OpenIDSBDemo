@@ -19,7 +19,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -37,11 +36,6 @@ import java.util.stream.Collectors;
 @RestController
 public class OauthDemo extends WebSecurityConfigurerAdapter {
 
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/*.png");
-    }
-
     @RequestMapping("/user")
     public Map<String, Object> user(@AuthenticationPrincipal OAuth2User principal) {
         return principal.getAttributes();
@@ -57,7 +51,7 @@ public class OauthDemo extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests(a -> a
-                        .antMatchers("/", "/error", "/webjars/**").permitAll()
+                        .antMatchers("/", "/*.png", "/error", "/webjars/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(e -> e
