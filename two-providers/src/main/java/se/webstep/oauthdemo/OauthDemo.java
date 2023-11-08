@@ -20,17 +20,18 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @SpringBootApplication
 @RestController
@@ -39,12 +40,6 @@ public class OauthDemo extends WebSecurityConfigurerAdapter {
     @RequestMapping("/user")
     public Map<String, Object> user(@AuthenticationPrincipal OAuth2User principal) {
         return principal.getAttributes();
-    }
-
-    @GetMapping("/oidc-principal")
-    public String getOidcUserPrincipal(@AuthenticationPrincipal OidcUser principal) {
-        Map<String, Object> claims = principal.getAttributes();
-        return claims.keySet().stream().map(k -> k + " = " + claims.get(k).toString()).collect(Collectors.joining("<br/>"));
     }
 
     @Override
@@ -61,6 +56,12 @@ public class OauthDemo extends WebSecurityConfigurerAdapter {
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 )
                 .logout(l -> l
+                        .addLogoutHandler(new LogoutHandler() {
+                            @Override
+                            public void logout(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) {
+                                System.out.println("LogoutHandler called");
+                            }
+                        })
                         .logoutSuccessUrl("/").permitAll()
                 )
                 .oauth2Login();

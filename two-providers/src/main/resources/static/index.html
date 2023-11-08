@@ -30,7 +30,7 @@
         <div>
             <button onClick="logout()" class="btn btn-primary">Logout</button>
         </div>
-        <div>
+        <div id="oidcInfo">
             <strong>Oidc User:</strong><br/><pre><span id="oidcUser"></span></pre>
         </div>
     </div>
@@ -53,6 +53,7 @@
 
           $.get("/user", function(data) {
               $("#oidcUser").html(JSON.stringify(data, undefined, 2));
+              $("#oidcInfo").hide();
               $("#user").html(data.name);
               $("#email").html(data.email);
               $("#iss").html(data.iss);
@@ -74,6 +75,15 @@
             });
             return true;
           }
+
+          $(document).ready(function(){
+              $("#email").click(function(event){
+                  $("#oidcInfo").toggle();
+              });
+              $("#picture").click(function(event){
+                  $("#oidcInfo").toggle();
+              });
+          });
         </script>
 </body>
 </html>
