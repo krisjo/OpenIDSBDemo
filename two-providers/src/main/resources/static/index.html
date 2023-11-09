@@ -1,89 +1,94 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <title>Hello Open ID Connect</title>
-<meta name="description" content="" />
-<meta name="viewport" content="width=device-width" />
-<base href="/" />
-<link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
-<script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
-<script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+    <meta name="description" content=""/>
+    <meta name="viewport" content="width=device-width"/>
+    <base href="/"/>
+    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css"/>
+    <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>Open ID Connect on Spring Boot</h1>
+<div class="container">
+    <h1>Open ID Connect on Spring Boot</h1>
+</div>
+<div class="container unauthenticated">
+    <div>
+        <h3>Google: <a href="/oauth2/authorization/google"><img src="/googlelogo.png" height="25" width="auto"/>
+            authenticate</a></h3>
     </div>
-    <div class="container unauthenticated">
-        <div>
-            <h3>Google: <a href="/oauth2/authorization/google"><img src="/googlelogo.png" height="25" width="auto"/> authenticate</a></h3>
-        </div>
-        <div>
-            <h3>Svipe: <a href="/oauth2/authorization/svipe"><img src="/svipe-symbol.png" height="25" width="auto"/> authenticate</a></h3>
-        </div>
+    <div>
+        <h3>Svipe: <a href="/oauth2/authorization/svipe"><img src="/svipe-symbol.png" height="25" width="auto"/>
+            authenticate</a></h3>
     </div>
-    <div class="container authenticated" style="display: none">
-        <h4>Logged in via <span id="iss"></span> as <span id="user"></span>, email: <span id="email"></span><br/></h4>
-        <br/>
-        <img src="" id="picture" width="auto" height="200px" alt="Missing picture"/>
-        <div>
+</div>
+<div class="container authenticated" style="display: none">
+    <p><h4>Logged in via <span id="iss"></span> as <span id="user"></span>, email: <span id="email"></span><br/>
+</h4></p>
+    <div style="float: left">
+        <p><img src="" id="picture" width="auto" height="200px" style="vertical-align: top;" alt="Missing picture"/></p>
+        <p>
             <button onClick="logout()" class="btn btn-primary">Logout</button>
-        </div>
-        <div id="oidcInfo">
-            <strong>Oidc User:</strong><br/><pre><span id="oidcUser"></span></pre>
-        </div>
+        </p>
     </div>
+    <div id="oidcInfo">
+        <strong>Oidc User:</strong><br/>
+        <pre><span id="oidcUser"></span></pre>
+    </div>
+</div>
 
-    <script type="text/javascript" src="/webjars/js-cookie/js.cookie.js"></script>
-    <script type="text/javascript">
-          $.ajaxSetup({
-            beforeSend : function(xhr, settings) {
-              if (settings.type == 'POST' || settings.type == 'PUT'
-                  || settings.type == 'DELETE') {
+<script type="text/javascript" src="/webjars/js-cookie/js.cookie.js"></script>
+<script type="text/javascript">
+    $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+            if (settings.type == 'POST' || settings.type == 'PUT'
+                || settings.type == 'DELETE') {
                 if (!(/^http:.*/.test(settings.url) || /^https:.*/
                     .test(settings.url))) {
-                  // Only send the token to relative URLs i.e. locally.
-                  xhr.setRequestHeader("X-XSRF-TOKEN", Cookies
-                      .get('XSRF-TOKEN'));
+                    // Only send the token to relative URLs i.e. locally.
+                    xhr.setRequestHeader("X-XSRF-TOKEN", Cookies
+                        .get('XSRF-TOKEN'));
                 }
-              }
             }
-          });
+        }
+    });
 
-          $.get("/user", function(data) {
-              $("#oidcUser").html(JSON.stringify(data, undefined, 2));
-              $("#oidcInfo").hide();
-              $("#user").html(data.name);
-              $("#email").html(data.email);
-              $("#iss").html(data.iss);
-              if (data.picture) {
-                  $("#picture").attr("src", data.picture);
-              }
-              if (data['com.svipe:document_portrait']) {
-                  $("#picture").attr("src", data['com.svipe:document_portrait']);
-              }
-              $(".unauthenticated").hide();
-              $(".authenticated").show();
-          });
+    $.get("/user", function (data) {
+        $("#oidcUser").html(JSON.stringify(data, undefined, 2));
+        $("#oidcInfo").hide();
+        $("#user").html(data.name);
+        $("#email").html(data.email);
+        $("#iss").html(data.iss);
+        if (data.picture) {
+            $("#picture").attr("src", data.picture);
+        }
+        if (data['com.svipe:document_portrait']) {
+            $("#picture").attr("src", data['com.svipe:document_portrait']);
+        }
+        $(".unauthenticated").hide();
+        $(".authenticated").show();
+    });
 
-          var logout = function() {
-            $.post("/logout", function() {
-              $("#user").html('');
-              $(".unauthenticated").show();
-              $(".authenticated").hide();
-            });
-            return true;
-          }
+    var logout = function () {
+        $.post("/logout", function () {
+            $("#user").html('');
+            $(".unauthenticated").show();
+            $(".authenticated").hide();
+        });
+        return true;
+    }
 
-          $(document).ready(function(){
-              $("#email").click(function(event){
-                  $("#oidcInfo").toggle();
-              });
-              $("#picture").click(function(event){
-                  $("#oidcInfo").toggle();
-              });
-          });
-        </script>
+    $(document).ready(function () {
+        $("#email").click(function (event) {
+            $("#oidcInfo").toggle();
+        });
+        $("#picture").click(function (event) {
+            $("#oidcInfo").toggle();
+        });
+    });
+</script>
 </body>
 </html>
