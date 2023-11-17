@@ -11,6 +11,10 @@ spring:
           svipe:
             client-id: 8a9b0e61-b542-4b69-abb3-57c2c761b4e2
             client-secret: 74ffd70b-670b-41b7-9a3a-0eb3fcf8e853
+          github:
+            client-id: 55142bcd615fb361054f
+            client-secret: 92bd967861dd945aaf89e303fb8678498c06d76c
+
         provider:
           google:
             issuer-uri: https://accounts.google.com
